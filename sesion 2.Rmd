@@ -1,0 +1,45 @@
+---
+title: "Sesión 2"
+author: "Juan Francisco Gracia Sercado."
+date: "18/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Vamos a generar un mapa integrando capas. Para ello utilizaremos el archivo **alcaldias.shp** que se encuentra en nuestra carpeta **mapas** -> **alcaldias** .
+
+El tipo de archivo shape es de polígonos, es decir, son formas cerradas. 
+
+```{r, eval=T}
+library(raster)
+capas <- shapefile("/home/jfractal/Documentos/talleres/MAPAS R/mapas/capas/alcaldias/alcaldias.shp")
+library(leaflet)
+leaflet()%>%
+  addTiles()%>%
+  addPolygons(data = capas, 
+              stroke = T, color = "red", weight = 5, opacity = 0.5, fill = T,
+              highlight = highlightOptions(weight = 3,
+                                              color = "black",
+                                              bringToFront = TRUE))
+```
+
+Si se quiere solo una parte (una alcaldía).
+
+Vamos a gráficar el polígono correspondiente a la alcaldía Gustavo A. Madero.
+
+```{r}
+GAM<-capas[capas$nomgeo=="Gustavo A. Madero",]
+library(leaflet)
+leaflet()%>%
+  addProviderTiles(providers$OpenTopoMap)%>%
+  addPolygons(data = GAM)
+```
+
+## Nota
+
+El simbolo "$" se usa para asignar (filtrar) variables de un conjunto de datos.
+
+Por ejemplo GAM <- capas[capas$nomgeo == "Gustavo A. Madero"] la instrucción que estamos dando es que de los datos **"capas"** tome la variable **"nomgeo"** y selecciones la observación que se llama **"Gustavo A. Madero"**.
+
